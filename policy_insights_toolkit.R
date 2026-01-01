@@ -1556,16 +1556,16 @@ ui <- dashboardPage(
       
       menuItem("1. Upload Data", tabName = "upload", icon = icon("cloud-upload-alt")),
       
-      menuItem("2. Understand Your Data", tabName = "explore", icon = icon("search"),
-               menuSubItem("Data Overview", tabName = "overview"),
-               menuSubItem("Visualize Trends", tabName = "trends"),
-               menuSubItem("Summary Statistics", tabName = "stats")),
-      
-      menuItem("3. Measure Impact", tabName = "impact", icon = icon("balance-scale"),
-               menuSubItem("Before vs After", tabName = "did"),
-               menuSubItem("", tabName = "synth")),
-      
-      menuItem("4. Export & Share", tabName = "export", icon = icon("file-export")),
+      menuItem("2. Explore Your Data", tabName = "explore", icon = icon("search"),
+               menuSubItem("Overview & Quality", tabName = "overview"),
+               menuSubItem("Trends Over Time", tabName = "trends"),
+               menuSubItem("Statistical Summary", tabName = "stats")),
+
+      menuItem("3. Analyze Impact", tabName = "impact", icon = icon("balance-scale"),
+               menuSubItem("Difference-in-Differences", tabName = "did"),
+               menuSubItem("Synthetic Control", tabName = "synth")),
+
+      menuItem("4. Export Results", tabName = "export", icon = icon("file-export")),
       
       hr(),
       
@@ -1681,27 +1681,34 @@ ui <- dashboardPage(
             width = 12,
             collapsible = TRUE,
             collapsed = TRUE,
-            
-            tags$p("This tool works best with ", tags$strong("panel data"), " — data where you observe the same units (like states, schools, or programs) over multiple time periods."),
-            
-            tags$h5("Your data should have:"),
+
+            tags$p("This toolkit is designed for ", tags$strong("panel data"), " — where you track the same entities (like states, schools, people, or organizations) across multiple time periods."),
+
+            tags$h5(icon("check-circle"), " Essential columns in your dataset:"),
             tags$ul(
-              tags$li(tags$strong("Unit identifier:"), " What are you tracking? (e.g., state name, school ID, participant ID)"),
-              tags$li(tags$strong("Time variable:"), " When was each observation? (e.g., year, quarter, month)"),
-              tags$li(tags$strong("Outcome measure:"), " What are you trying to measure? (e.g., test scores, employment rate, revenue)"),
-              tags$li(tags$strong("Treatment indicator:"), " Did this unit receive the intervention? (optional - you can specify this later)")
+              tags$li(tags$strong("Who/What:"), " Column identifying each entity (e.g., 'State', 'School_ID', 'Participant_Name')"),
+              tags$li(tags$strong("When:"), " Column showing time periods (e.g., 'Year', 'Quarter', 'Month')"),
+              tags$li(tags$strong("Outcome:"), " Column with the values you want to analyze (e.g., 'Test_Score', 'Unemployment_Rate', 'Sales')")
             ),
-            
-            tags$h5("Example data structure:"),
+
+            tags$h5(icon("plus-circle"), " Optional but helpful:"),
+            tags$ul(
+              tags$li(tags$strong("Treatment indicator:"), " Column showing which units got the program/policy (typically 1=yes, 0=no)")
+            ),
+
+            tags$h5(icon("table"), " Example: Analyzing a minimum wage policy"),
             tags$pre(
-              "State      Year   Unemployment   Policy_Enacted
-California  2018   4.2           0
-California  2019   4.0           0
-California  2020   3.9           1
-Texas       2018   3.8           0
-Texas       2019   3.7           0
-Texas       2020   3.5           0"
-            )
+              "State      Year   Unemployment   MinWage_Increase
+California  2018   4.2            0
+California  2019   4.0            0
+California  2020   3.9            1
+Texas       2018   3.8            0
+Texas       2019   3.7            0
+Texas       2020   3.5            0"
+            ),
+
+            tags$p(class = "help-text", icon("lightbulb"),
+                   " Each state appears multiple times (once per year), and we can see California raised its minimum wage in 2020. This is perfect for analyzing program effects!")
           )
         )
       ),
@@ -1712,7 +1719,7 @@ Texas       2020   3.5           0"
         
         div(class = "section-header",
             tags$h2(icon("cloud-upload-alt"), " Upload Your Data"),
-            tags$p("Upload your Excel or CSV file, or try our sample dataset to explore the tool.")
+            tags$p("Start by uploading your data file, or explore the toolkit with one of our realistic example datasets.")
         ),
         
         fluidRow(
@@ -1804,10 +1811,10 @@ Texas       2020   3.5           0"
       # ===== DATA OVERVIEW TAB =====
       tabItem(
         tabName = "overview",
-        
+
         div(class = "section-header",
-            tags$h2(icon("table"), " Data Overview"),
-            tags$p("A quick look at what's in your data and its quality.")
+            tags$h2(icon("table"), " Data Overview & Quality"),
+            tags$p("Get a quick snapshot of your dataset: how many observations you have, what variables are included, and whether there are any data quality issues to address.")
         ),
         
         fluidRow(
@@ -1854,10 +1861,10 @@ Texas       2020   3.5           0"
       # ===== TRENDS TAB =====
       tabItem(
         tabName = "trends",
-        
+
         div(class = "section-header",
-            tags$h2(icon("chart-line"), " Visualize Trends"),
-            tags$p("See how your data changes over time.")
+            tags$h2(icon("chart-line"), " Trends Over Time"),
+            tags$p("Visualize how your outcome variables change over time. Look for patterns, compare different groups, and identify potential intervention effects before running formal analyses.")
         ),
         
         fluidRow(
@@ -1934,10 +1941,10 @@ Texas       2020   3.5           0"
       # ===== SUMMARY STATS TAB =====
       tabItem(
         tabName = "stats",
-        
+
         div(class = "section-header",
-            tags$h2(icon("calculator"), " Summary Statistics"),
-            tags$p("Get the numbers behind your data.")
+            tags$h2(icon("calculator"), " Statistical Summary"),
+            tags$p("Calculate key statistics for your variables: averages, ranges, and distributions. Compare statistics across different groups to understand your data better.")
         ),
         
         fluidRow(
@@ -2015,10 +2022,10 @@ Texas       2020   3.5           0"
       # ===== DIFFERENCE-IN-DIFFERENCES TAB =====
       tabItem(
         tabName = "did",
-        
+
         div(class = "section-header",
-            tags$h2(icon("balance-scale"), " Before vs After Analysis"),
-            tags$p("Compare what happened to groups that received an intervention vs. those that didn't.")
+            tags$h2(icon("balance-scale"), " Difference-in-Differences Analysis"),
+            tags$p("Compare what happened to groups that received an intervention vs. those that didn't. This method helps you understand if your program or policy truly made a difference by accounting for natural trends over time.")
         ),
         
         # Step indicator
@@ -2042,29 +2049,29 @@ Texas       2020   3.5           0"
                        selectInput(
                          "did_unit",
                          label = tags$span(
-                           "What are your units?",
+                           "Unit identifier column:",
                            tags$span(class = "help-tooltip", icon("question-circle"),
-                                     title = "What entities are you comparing? (e.g., states, schools, participants)")
+                                     title = "Column that identifies what you're comparing (e.g., state names, school IDs, participant IDs)")
                          ),
                          choices = NULL
                        ),
-                       
+
                        selectInput(
                          "did_time",
                          label = tags$span(
-                           "What is your time variable?",
+                           "Time period column:",
                            tags$span(class = "help-tooltip", icon("question-circle"),
-                                     title = "When was each observation made? (e.g., year, quarter)")
+                                     title = "Column showing when each observation occurred (e.g., year, quarter, month)")
                          ),
                          choices = NULL
                        ),
-                       
+
                        selectInput(
                          "did_outcome",
                          label = tags$span(
-                           "What are you measuring?",
+                           "Outcome to measure:",
                            tags$span(class = "help-tooltip", icon("question-circle"),
-                                     title = "The outcome you want to see if the intervention affected")
+                                     title = "The variable you want to analyze - what you're trying to see if the intervention affected")
                          ),
                          choices = NULL
                        )
@@ -2075,13 +2082,13 @@ Texas       2020   3.5           0"
                        
                        radioButtons(
                          "did_treatment_type",
-                         label = "How do you want to identify who got treated?",
+                         label = "How to identify treated units:",
                          choices = c(
-                           "I have a column that indicates treatment" = "indicator",
-                           "I'll specify which units were treated" = "manual"
+                           "I have a treatment column (0s and 1s)" = "indicator",
+                           "I'll select which units got the program/policy" = "manual"
                          )
                        ),
-                       
+
                        conditionalPanel(
                          condition = "input.did_treatment_type == 'indicator'",
                          selectInput(
@@ -2089,41 +2096,45 @@ Texas       2020   3.5           0"
                            label = "Treatment indicator column:",
                            choices = NULL
                          ),
-                         tags$p(class = "help-text", "This column should be 1 when a unit is treated, 0 otherwise.")
+                         tags$p(class = "help-text", icon("info-circle"),
+                                " This column should have 1 when a unit received the intervention, 0 when it didn't.")
                        ),
-                       
+
                        conditionalPanel(
                          condition = "input.did_treatment_type == 'manual'",
                          selectizeInput(
                            "did_treated_units",
-                           label = "Which units received the intervention?",
+                           label = "Units that got the program/policy:",
                            choices = NULL,
                            multiple = TRUE
                          ),
                          numericInput(
                            "did_treatment_time",
-                           label = "When did the intervention start?",
+                           label = "Year/period when it started:",
                            value = NULL
-                         )
+                         ),
+                         tags$p(class = "help-text", icon("info-circle"),
+                                " Select all units that received the intervention and when it began.")
                        )
                 ),
                 
                 column(4,
-                       tags$h4(icon("sliders-h"), " Options"),
-                       
+                       tags$h4(icon("sliders-h"), " Additional Controls (Optional)"),
+
                        selectizeInput(
                          "did_controls",
                          label = tags$span(
-                           "Control for other factors? (optional)",
+                           "Other variables to account for:",
                            tags$span(class = "help-tooltip", icon("question-circle"),
-                                     title = "Other variables that might affect your outcome")
+                                     title = "Select other variables that might influence your outcome (e.g., population, GDP, demographics). This is optional but can improve accuracy.")
                          ),
                          choices = NULL,
                          multiple = TRUE
                        ),
-                       
+
                        div(class = "info-panel",
-                           tags$p(tags$strong("Don't worry!"), " We'll use best practices for the statistical analysis automatically.")
+                           icon("check-circle"),
+                           tags$p(tags$strong("Automatic best practices:"), " We'll handle the statistical details (fixed effects, clustering, etc.) for you.")
                        )
                 )
               ),
@@ -2134,8 +2145,8 @@ Texas       2020   3.5           0"
                 style = "text-align: right;",
                 actionButton(
                   "did_check_ready",
-                  "Check If Ready →",
-                  icon = icon("arrow-right"),
+                  "Validate Setup & Continue →",
+                  icon = icon("check-circle"),
                   class = "btn-primary btn-lg"
                 )
               )
@@ -2281,10 +2292,10 @@ Texas       2020   3.5           0"
       # ===== SYNTHETIC CONTROL TAB =====
       tabItem(
         tabName = "synth",
-        
+
         div(class = "section-header",
-            tags$h2(icon("clone"), " What Would Have Happened?"),
-            tags$p("Create a 'synthetic' comparison to estimate what would have happened without the intervention.")
+            tags$h2(icon("clone"), " Synthetic Control Method"),
+            tags$p("Create a 'synthetic twin' of the treated unit to estimate what would have happened without the intervention. This method is ideal when only one state, city, or organization received a program or policy change.")
         ),
         
         # Step indicator
@@ -2313,47 +2324,73 @@ Texas       2020   3.5           0"
               fluidRow(
                 column(4,
                        tags$h4(icon("table"), " Data Structure"),
-                       
-                       selectInput("synth_unit", "What are your units?", choices = NULL),
-                       selectInput("synth_time", "What is your time variable?", choices = NULL),
-                       selectInput("synth_outcome", "What are you measuring?", choices = NULL)
-                ),
-                
-                column(4,
-                       tags$h4(icon("flask"), " The Intervention"),
-                       
+
                        selectInput(
-                         "synth_treated_unit",
-                         label = "Which single unit received the intervention?",
+                         "synth_unit",
+                         label = tags$span(
+                           "Unit identifier column:",
+                           tags$span(class = "help-tooltip", icon("question-circle"),
+                                     title = "Column identifying each unit (e.g., state names, country names)")
+                         ),
                          choices = NULL
                        ),
-                       
+                       selectInput(
+                         "synth_time",
+                         label = tags$span(
+                           "Time period column:",
+                           tags$span(class = "help-tooltip", icon("question-circle"),
+                                     title = "Column showing time periods (e.g., year, quarter)")
+                         ),
+                         choices = NULL
+                       ),
+                       selectInput(
+                         "synth_outcome",
+                         label = tags$span(
+                           "Outcome to measure:",
+                           tags$span(class = "help-tooltip", icon("question-circle"),
+                                     title = "What you're analyzing the effect on")
+                         ),
+                         choices = NULL
+                       )
+                ),
+
+                column(4,
+                       tags$h4(icon("flask"), " The Intervention"),
+
+                       selectInput(
+                         "synth_treated_unit",
+                         label = "Which ONE unit got the program/policy?",
+                         choices = NULL
+                       ),
+
                        numericInput(
                          "synth_treatment_time",
-                         label = "When did the intervention start?",
+                         label = "Year/period when it started:",
                          value = NULL
                        ),
-                       
-                       tags$p(class = "help-text", 
-                              icon("info-circle"), 
-                              " Synthetic control works best when analyzing one treated unit.")
+
+                       tags$p(class = "help-text",
+                              icon("lightbulb"),
+                              " Synthetic control works best with a single treated unit and many comparison units.")
                 ),
-                
+
                 column(4,
-                       tags$h4(icon("sliders-h"), " Matching Variables"),
-                       
+                       tags$h4(icon("balance-scale"), " Variables for Matching"),
+
                        selectizeInput(
                          "synth_predictors",
                          label = tags$span(
-                           "What characteristics should match?",
-                           tags$span(class = "help-tooltip", icon("question-circle"))
+                           "Characteristics to match on:",
+                           tags$span(class = "help-tooltip", icon("question-circle"),
+                                     title = "Select variables to create a good synthetic comparison (e.g., demographics, economic indicators). The synthetic unit will match the treated unit on these.")
                          ),
                          choices = NULL,
                          multiple = TRUE
                        ),
-                       
-                       tags$p(class = "help-text", 
-                              "Select variables that should be similar between the treated unit and its synthetic comparison.")
+
+                       tags$p(class = "help-text",
+                              icon("info-circle"),
+                              " Choose variables that are good predictors of your outcome. The method will find the best weighted combination of control units.")
                 )
               ),
               
@@ -2361,7 +2398,7 @@ Texas       2020   3.5           0"
               
               div(
                 style = "text-align: right;",
-                actionButton("synth_check_ready", "Check If Ready →", icon = icon("arrow-right"), class = "btn-primary btn-lg")
+                actionButton("synth_check_ready", "Validate Setup & Continue →", icon = icon("check-circle"), class = "btn-primary btn-lg")
               )
             )
           )
@@ -2533,10 +2570,10 @@ Texas       2020   3.5           0"
       # ===== EXPORT TAB =====
       tabItem(
         tabName = "export",
-        
+
         div(class = "section-header",
-            tags$h2(icon("file-export"), " Export & Share"),
-            tags$p("Download your results in various formats.")
+            tags$h2(icon("file-export"), " Export Your Results"),
+            tags$p("Download your data, charts, and analysis results to share with colleagues or include in reports and presentations.")
         ),
         
         fluidRow(
@@ -2571,10 +2608,10 @@ Texas       2020   3.5           0"
       # ===== Chatbot Tab ==== #
       tabItem(
         tabName = "assistant",
-        
+
         div(class = "section-header",
             tags$h2(icon("robot"), " AI Assistant"),
-            tags$p("Get help understanding your data and analysis from our AI assistant.")
+            tags$p("Ask questions about your data, get help understanding statistical concepts, or receive guidance on choosing the right analysis method. The AI assistant provides personalized help based on your specific dataset and analysis.")
         ),
         
         fluidRow(
