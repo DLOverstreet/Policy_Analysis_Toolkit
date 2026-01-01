@@ -46,6 +46,7 @@ library(future)
 library(commonmark)
 
 source("chatbot_module.R")  # Make sure chatbot_module.R is in the same directory
+source("example_datasets.R")  # Example datasets library
 
 # Set global theme
 theme_set(theme_minimal(base_size = 13, base_family = "sans"))
@@ -1289,6 +1290,242 @@ table.dataTable thead th {
     display: none;
   }
 }
+
+/* ===== GLOBAL PROGRESS STEPPER ===== */
+.global-progress-wrapper {
+  background: white;
+  padding: 20px 30px;
+  margin: -15px -15px 20px -15px;
+  border-bottom: 2px solid #e8eef3;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+}
+
+.global-progress-stepper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.progress-step:hover .progress-circle {
+  transform: scale(1.1);
+}
+
+.progress-connector {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  width: 100%;
+  height: 3px;
+  background: #e0e6ed;
+  z-index: 0;
+}
+
+.progress-step:last-child .progress-connector {
+  display: none;
+}
+
+.progress-step.completed .progress-connector {
+  background: linear-gradient(90deg, #27ae60 0%, #27ae60 100%);
+}
+
+.progress-step.active .progress-connector {
+  background: linear-gradient(90deg, #27ae60 0%, #e0e6ed 100%);
+}
+
+.progress-circle {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #e0e6ed;
+  color: #95a5a6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+  position: relative;
+  z-index: 2;
+  transition: all 0.3s ease;
+  border: 3px solid #f8fafc;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.progress-step.completed .progress-circle {
+  background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+  color: white;
+}
+
+.progress-step.active .progress-circle {
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.progress-label {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #7f8c8d;
+  font-weight: 500;
+  text-align: center;
+  max-width: 120px;
+}
+
+.progress-step.active .progress-label {
+  color: #3498db;
+  font-weight: 600;
+}
+
+.progress-step.completed .progress-label {
+  color: #27ae60;
+  font-weight: 600;
+}
+
+/* ===== DATASET LIBRARY ===== */
+.dataset-library {
+  margin-top: 20px;
+}
+
+.dataset-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.dataset-card {
+  background: white;
+  border: 2px solid #e8eef3;
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.dataset-card:hover {
+  border-color: #3498db;
+  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.15);
+  transform: translateY(-4px);
+}
+
+.dataset-card.selected {
+  border-color: #27ae60;
+  background: #f0f9f4;
+}
+
+.dataset-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: white;
+  margin-bottom: 12px;
+}
+
+.dataset-icon.green { background: linear-gradient(135deg, #27ae60 0%, #229954 100%); }
+.dataset-icon.blue { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); }
+.dataset-icon.red { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); }
+.dataset-icon.purple { background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); }
+
+.dataset-card h4 {
+  margin: 0 0 8px 0;
+  color: #2c3e50;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.dataset-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.badge-beginner { background: #d4edda; color: #155724; }
+.badge-intermediate { background: #fff3cd; color: #856404; }
+.badge-advanced { background: #f8d7da; color: #721c24; }
+
+.dataset-description {
+  font-size: 13px;
+  color: #7f8c8d;
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.dataset-meta {
+  font-size: 12px;
+  color: #95a5a6;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #ecf0f1;
+}
+
+.dataset-meta i {
+  margin-right: 6px;
+  color: #3498db;
+}
+
+.load-dataset-btn {
+  margin-top: 12px;
+  width: 100%;
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.load-dataset-btn:hover {
+  background: linear-gradient(135deg, #2980b9 0%, #21618c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+@media (max-width: 768px) {
+  .global-progress-stepper {
+    flex-wrap: wrap;
+  }
+
+  .progress-step {
+    min-width: 80px;
+  }
+
+  .progress-connector {
+    display: none;
+  }
+
+  .dataset-grid {
+    grid-template-columns: 1fr;
+  }
+}
 "
 
 # =============================================================================
@@ -1360,7 +1597,10 @@ ui <- dashboardPage(
     tags$head(
       tags$style(HTML(custom_css))
     ),
-    
+
+    # Global Progress Stepper (shows on all pages except welcome)
+    uiOutput("global_progress_stepper"),
+
     tabItems(
       
       # ===== WELCOME TAB =====
@@ -1500,20 +1740,16 @@ Texas       2020   3.5           0"
             ),
             
             hr(),
-            
-            tags$h4("Or try a sample dataset:"),
-            
-            actionButton(
-              "load_sample",
-              "Load Sample: State Policy Data",
-              icon = icon("database"),
-              class = "btn-info btn-block"
-            ),
-            
-            tags$p(
-              class = "help-text",
-              style = "margin-top: 10px; color: #7f8c8d; font-size: 0.9em;",
-              "Sample data includes 10 US states from 2000-2019 with economic indicators and a policy intervention."
+
+            tags$div(
+              style = "text-align: center;",
+              actionButton(
+                "show_dataset_library",
+                "Browse Example Datasets",
+                icon = icon("book"),
+                class = "btn-success btn-block",
+                style = "font-size: 15px; padding: 12px;"
+              )
             )
           ),
           
@@ -1534,10 +1770,33 @@ Texas       2020   3.5           0"
             solidHeader = TRUE,
             width = 12,
             collapsible = TRUE,
-            
+
             DTOutput("data_preview"),
-            
+
             uiOutput("detected_structure")
+          )
+        ),
+
+        # Dataset Library (hidden by default)
+        shinyjs::hidden(
+          div(
+            id = "dataset_library_panel",
+            fluidRow(
+              box(
+                title = "Example Datasets Library",
+                status = "success",
+                solidHeader = TRUE,
+                width = 12,
+                collapsible = TRUE,
+
+                tags$p(
+                  style = "font-size: 15px; margin-bottom: 20px;",
+                  "Explore the toolkit with these realistic policy analysis datasets. Each includes documentation and suggested analyses."
+                ),
+
+                uiOutput("dataset_library_ui")
+              )
+            )
           )
         )
       ),
@@ -2470,7 +2729,165 @@ server <- function(input, output, session) {
     did_results = did_results_data,  # DiD results reactive
     synth_results = synth_results_data  # Synth results reactive
   )
-  
+
+  # ===== GLOBAL PROGRESS TRACKING =====
+
+  # Calculate which steps are completed
+  progress_status <- reactive({
+    df <- data()
+    det <- detected()
+    has_did <- !is.null(did_results_data())
+    has_synth <- !is.null(synth_results_data())
+
+    list(
+      upload = !is.null(df),
+      explore = !is.null(df) && !is.null(det$data_type),
+      analyze = has_did || has_synth,
+      export = has_did || has_synth
+    )
+  })
+
+  # Render global progress stepper
+  output$global_progress_stepper <- renderUI({
+    # Don't show on welcome page
+    if (is.null(input$sidebar) || input$sidebar == "welcome") {
+      return(NULL)
+    }
+
+    progress <- progress_status()
+    current_tab <- input$sidebar
+
+    # Define steps
+    steps <- list(
+      list(num = 1, label = "Upload", id = "upload", tabs = c("upload")),
+      list(num = 2, label = "Explore", id = "explore", tabs = c("overview", "trends", "stats")),
+      list(num = 3, label = "Analyze", id = "analyze", tabs = c("did", "synth")),
+      list(num = 4, label = "Export", id = "export", tabs = c("export"))
+    )
+
+    # Create step elements
+    step_elements <- lapply(steps, function(step) {
+      # Determine step status
+      is_active <- current_tab %in% step$tabs
+      is_completed <- progress[[step$id]]
+
+      step_class <- "progress-step"
+      if (is_completed) step_class <- paste(step_class, "completed")
+      if (is_active) step_class <- paste(step_class, "active")
+
+      # Circle content
+      circle_content <- if (is_completed) {
+        icon("check")
+      } else {
+        step$num
+      }
+
+      div(
+        class = step_class,
+        onclick = sprintf("Shiny.setInputValue('progress_step_click', '%s', {priority: 'event'})", step$tabs[1]),
+        div(class = "progress-connector"),
+        div(class = "progress-circle", circle_content),
+        div(class = "progress-label", step$label)
+      )
+    })
+
+    div(
+      class = "global-progress-wrapper",
+      div(
+        class = "global-progress-stepper",
+        step_elements
+      )
+    )
+  })
+
+  # Handle progress step clicks
+  observeEvent(input$progress_step_click, {
+    updateTabItems(session, "sidebar", input$progress_step_click)
+  })
+
+  # ===== DATASET LIBRARY =====
+
+  # Toggle dataset library panel
+  observeEvent(input$show_dataset_library, {
+    shinyjs::toggle("dataset_library_panel")
+  })
+
+  # Render dataset library UI
+  output$dataset_library_ui <- renderUI({
+    metadata <- get_dataset_metadata()
+
+    dataset_cards <- lapply(names(metadata), function(dataset_id) {
+      meta <- metadata[[dataset_id]]
+
+      # Determine badge class
+      badge_class <- switch(
+        tolower(meta$difficulty),
+        "beginner" = "badge-beginner",
+        "intermediate" = "badge-intermediate",
+        "advanced" = "badge-advanced",
+        "badge-beginner"
+      )
+
+      div(
+        class = "dataset-card",
+        div(class = paste("dataset-icon", meta$color), icon(meta$icon)),
+        tags$h4(meta$name),
+        span(class = paste("dataset-badge", badge_class), meta$difficulty),
+        div(class = "dataset-description", meta$description),
+        div(
+          class = "dataset-meta",
+          div(icon("table"), sprintf("%d rows", meta$rows)),
+          div(icon("chart-line"), meta$best_for)
+        ),
+        actionButton(
+          paste0("load_dataset_", dataset_id),
+          "Load This Dataset",
+          class = "load-dataset-btn",
+          onclick = sprintf("Shiny.setInputValue('load_example_dataset', '%s', {priority: 'event'})", dataset_id)
+        )
+      )
+    })
+
+    div(class = "dataset-grid", dataset_cards)
+  })
+
+  # Handle dataset loading
+  observeEvent(input$load_example_dataset, {
+    dataset_id <- input$load_example_dataset
+    req(dataset_id)
+
+    tryCatch({
+      # Load the dataset
+      df <- get_example_dataset(dataset_id)
+
+      if (!is.null(df)) {
+        data(df)
+        detected(detect_data_structure(df))
+
+        # Get metadata for notification
+        metadata <- get_dataset_metadata()
+        meta <- metadata[[dataset_id]]
+
+        # Hide the library panel
+        shinyjs::hide("dataset_library_panel")
+
+        # Show success notification
+        showNotification(
+          paste0(
+            "Loaded: ", meta$name, "\n",
+            format(nrow(df), big.mark = ","), " rows, ",
+            ncol(df), " columns\n\n",
+            "Suggested: ", meta$suggested_analysis
+          ),
+          type = "message",
+          duration = 10
+        )
+      }
+    }, error = function(e) {
+      showNotification(paste("Error loading dataset:", e$message), type = "error")
+    })
+  })
+
   # ===== DATA LOADING =====
   
   output$has_data <- reactive({ !is.null(data()) })
